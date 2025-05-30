@@ -6,7 +6,7 @@ interface FuncionarioState {
         cpf: string;
         rg: string;
         sexo: number;
-        dataNascimento: Date | null;
+        dataNascimento: string | null;
         cargo: string;
         ativo: boolean;
     }[];
@@ -15,7 +15,7 @@ interface FuncionarioState {
         cpf: string;
         rg: string;
         sexo: number;
-        dataNascimento: Date | null;
+        dataNascimento: string | null;
         cargo: string;
         ativo: boolean;
     } | null;

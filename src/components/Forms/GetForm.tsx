@@ -1,53 +1,45 @@
-import { Button, RadioChangeEvent, DatePicker, Select } from "antd";
+import { Button, DatePicker, Radio, Select } from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import { Radio } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleFormVisibility } from "../../store/slices/formSlice";
+import { setFuncionario, clearFuncionarioEditado } from "../../store/slices/funcionarioSlice";
+import moment from "moment";
 import UlCustom from "./UlCustom";
 import InputCustom from "./InputCustom";
 import FuncionarioStatus from "./FuncionarioStatus";
 import UsaEpi from "./UsaEpi";
-import { ArrowLeftOutlined } from "@ant-design/icons";
-import { useDispatch, useSelector } from "react-redux";
-import { toggleFormVisibility } from "../../store/slices/formSlice";
 import api from "../../api";
-import { setFuncionario, clearFuncionarioEditado } from "../../store/slices/funcionarioSlice";
-import moment from "moment";
+import { toast } from "react-toastify";
 
-interface FuncionariosProps {
-  nome: string;
-  cpf: string;
-  rg: string;
-  sexo: number;
-  dataNascimento: Date | null;
-  cargo: string;
-  ativo: boolean;
-}
+
+const cargos = ["gerente", "desenvolvedor", "analista", "coordenador", "assistente"];
 
 export default function GetForm() {
-  const [nome, setNome] = useState("");
-  const [cpf, setCpf] = useState("");
-  const [rg, setRg] = useState("");
-  const [sexo, setSexo] = useState(1);
-  const [dataNascimento, setDataNascimento] = useState<moment.Moment | null>(null);
-  const [cargo, setCargo] = useState("");
-  const [isAtivo, setIsAtivo] = useState(false);
+  const [form, setForm] = useState({
+    nome: "",
+    cpf: "",
+    rg: "",
+    sexo: 1,
+    dataNascimento: null as moment.Moment | null,
+    cargo: "",
+    ativo: false,
+  });
 
   const dispatch = useDispatch();
   const funcionarioEditado = useSelector((state: any) => state.funcionario.funcionarioEditado);
 
   useEffect(() => {
     if (funcionarioEditado) {
-      setNome(funcionarioEditado.nome);
-      setCpf(funcionarioEditado.cpf);
-      setRg(funcionarioEditado.rg);
-      setSexo(funcionarioEditado.sexo);
-      setDataNascimento(moment(funcionarioEditado.dataNascimento));
-      setCargo(funcionarioEditado.cargo);
-      setIsAtivo(funcionarioEditado.ativo);
+      setForm({
+        ...funcionarioEditado,
+        dataNascimento: moment(funcionarioEditado.dataNascimento),
+      });
     }
   }, [funcionarioEditado]);
 
-  const onChange = (e: RadioChangeEvent) => {
-    setSexo(e.target.value);
+  const handleChange = (field: string, value: any) => {
+    setForm(prev => ({ ...prev, [field]: value }));
   };
 
   const handleBackClick = () => {
@@ -58,37 +50,34 @@ export default function GetForm() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const { nome, cpf, rg, cargo, dataNascimento } = form;
     if (!nome || !cpf || !rg || !cargo || !dataNascimento) {
-      alert('Todos os campos são obrigatórios');
+      alert("Todos os campos são obrigatórios");
       return;
     }
 
-    const formData: FuncionariosProps = {
-      nome,
-      cpf,
-      rg,
-      sexo,
-      dataNascimento: dataNascimento ? dataNascimento.toDate() : null,
-      cargo,
-      ativo: isAtivo,
+    const formData = {
+      ...form,
+      dataNascimento: dataNascimento.toDate(),
     };
 
     try {
       if (funcionarioEditado) {
         await api.put(`/funcionarios/${cpf}`, formData);
+        toast.success("Funcionário editado com sucesso!");
       } else {
-        await api.post('/funcionarios', formData);
+        await api.post("/funcionarios", formData);
+        toast.success("Funcionário salvo com sucesso!");
+        
       }
-      dispatch(setFuncionario(formData));
-      setNome('');
-      setCpf('');
-      setRg('');
-      setSexo(1);
-      setDataNascimento(null);
-      setCargo('');
-      setIsAtivo(false);
+      dispatch(setFuncionario({
+        ...formData,
+        dataNascimento: formData.dataNascimento
+        ? formData.dataNascimento.toISOString() : null,
+      }));
+      setForm({ nome: "", cpf: "", rg: "", sexo: 1, dataNascimento: null, cargo: "", ativo: false });
     } catch (error) {
-      console.error('Erro ao salvar ou editar o funcionário', error);
+      toast.error("Erro ao salvar funcionário");
     }
   };
 
@@ -96,37 +85,35 @@ export default function GetForm() {
     <form className="formContainer">
       <div className="blue-bar">
         <div className="content">
-          <ul style={{ display: 'flex', padding: '0px', margin: '0px', gap: '15px' }}>
-            <Button onClick={handleBackClick} style={{ backgroundColor: '#649FBF', color: 'white', border: 'none' }} icon={<ArrowLeftOutlined style={{ color: 'white' }} />} />
-            <p style={{ color: 'white', fontSize: '24px' }}>{funcionarioEditado ? 'Editar Funcionário' : 'Adicionar Funcionário'}</p>
+          <ul style={{ display: "flex", gap: "15px", margin: 0, padding: 0 }}>
+            <Button onClick={handleBackClick} style={{ backgroundColor: "#649FBF", color: "white", border: "none" }} icon={<ArrowLeftOutlined />} />
+            <p style={{ color: "white", fontSize: "24px" }}>{funcionarioEditado ? "Editar Funcionário" : "Adicionar Funcionário"}</p>
           </ul>
         </div>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', padding: '16px 24px', gap: '16px' }}>
-        <FuncionarioStatus isAtivo={isAtivo} setIsAtivo={setIsAtivo} />
-        <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #649FBF', padding: '0px 12px', gap: '24px', borderRadius: '10px', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.3)' }}>
-          <div style={{ width: '333px' }}>
-            <UlCustom>
-              <span>Nome</span>
-              <InputCustom placeholder="Nome" value={nome} onChange={(e) => setNome(e.target.value)} required />
-            </UlCustom>
+      <div style={{ display: "flex", flexDirection: "column", padding: "16px 24px", gap: "16px" }}>
+        <FuncionarioStatus isAtivo={form.ativo} setIsAtivo={(ativo) => handleChange("ativo", ativo)} />
 
-            <UlCustom>
-              <span>CPF</span>
-              <InputCustom placeholder="CPF" value={cpf} onChange={(e) => setCpf(e.target.value)} maxLenght={11} required />
-            </UlCustom>
-
-            <UlCustom>
-              <span>RG</span>
-              <InputCustom placeholder="RG" value={rg} onChange={(e) => setRg(e.target.value)} maxLenght={7} required />
-            </UlCustom>
+        <div style={{ display: "flex", gap: "24px", padding: "12px", border: "1px solid #649FBF", borderRadius: "10px", boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.3)" }}>
+          <div style={{ width: "333px" }}>
+            {["nome", "cpf", "rg"].map((field) => (
+              <UlCustom key={field}>
+                <span>{field.toUpperCase()}</span>
+                <InputCustom
+                  placeholder={field.toUpperCase()}
+                  value={form[field as keyof typeof form]}
+                  onChange={(e) => handleChange(field, e.target.value)}
+                  required
+                />
+              </UlCustom>
+            ))}
           </div>
 
           <div>
             <UlCustom>
               <span>Sexo</span>
-              <Radio.Group onChange={onChange} value={sexo} style={{ padding: '10px 0px' }}>
+              <Radio.Group onChange={(e) => handleChange("sexo", e.target.value)} value={form.sexo} style={{ padding: "10px 0" }}>
                 <Radio value={1}>Masculino</Radio>
                 <Radio value={2}>Feminino</Radio>
               </Radio.Group>
@@ -135,35 +122,28 @@ export default function GetForm() {
             <UlCustom>
               <span>Data de Nascimento</span>
               <DatePicker
-                style={{ border: '1px solid #649FBF', borderRadius: '10px', padding: '8px' }}
-                format={'DD/MM/YYYY'}
-                value={dataNascimento}
-                onChange={(date) => setDataNascimento(date)}
+                style={{ border: "1px solid #649FBF", borderRadius: "10px", padding: "8px" }}
+                format="DD/MM/YYYY"
+                value={form.dataNascimento}
+                onChange={(date) => handleChange("dataNascimento", date)}
               />
             </UlCustom>
 
             <UlCustom>
               <span>Cargo</span>
-              <Select
-                placeholder="Cargo"
-                style={{ height: '40px' }}
-                value={cargo}
-                onChange={setCargo}
-              >
-                <Select.Option value="gerente">Gerente</Select.Option>
-                <Select.Option value="desenvolvedor">Desenvolvedor</Select.Option>
-                <Select.Option value="analista">Analista</Select.Option>
-                <Select.Option value="coordenador">Coordenador</Select.Option>
-                <Select.Option value="assistente">Assistente</Select.Option>
+              <Select placeholder="Cargo" style={{ height: "40px" }} value={form.cargo} onChange={(value) => handleChange("cargo", value)}>
+                {cargos.map((c) => (
+                  <Select.Option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</Select.Option>
+                ))}
               </Select>
             </UlCustom>
           </div>
         </div>
 
         <UsaEpi />
-
-        <Button onClick={handleSave} type="link" htmlType="submit" style={{ color: '#649FBF', border: '1px solid #649FBF', marginBottom: '15px' }}>
-          {funcionarioEditado ? 'Salvar Alterações' : 'Salvar'}
+        
+        <Button onClick={handleSave} type="link" htmlType="submit" style={{ color: "#649FBF", border: "1px solid #649FBF", marginBottom: "15px" }}>
+          {funcionarioEditado ? "Salvar Alterações" : "Salvar"}
         </Button>
       </div>
     </form>

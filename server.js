@@ -2,7 +2,9 @@ import express from "express";
 import cors from "cors";
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173',
+}));
 
 app.use(express.json());
 
@@ -21,7 +23,8 @@ app.post('/funcionarios', (req, res) => {
 app.put('/funcionarios/:id', (req, res) => {
   const { id } = req.params;
   const updatedData = req.body;
-  funcionarios = funcionarios.map(func => func.id === id ? { ...func, ...updatedData } : func);
+  funcionarios = funcionarios.map(func =>
+  String(func.id) === String(id) ? { ...func, ...updatedData } : func);;
   res.json(updatedData);
 });
 

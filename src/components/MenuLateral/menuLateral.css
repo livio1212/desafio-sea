@@ -1,54 +1,95 @@
 .menuConteiner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: #649FBF;
-    width: 56px;
-    height: 768px;
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #649FBF;
+  width: 56px;
+  height: 768px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.15);
+  animation: fadeInLeft 0.5s ease-out;
+}
+
+@keyframes fadeInLeft {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 .iconsMenuLateral button {
-    background: none;
-    border: none;
-    font: inherit;
-    padding: 0;
-    cursor: pointer;
+  background: none;
+  border: none;
+  font: inherit;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.3s ease;
+}
+
+.iconsMenuLateral button:hover {
+  transform: scale(1.1);
+  filter: brightness(1.1);
 }
 
 .outplay {
-    padding: 17px;
-    background-color: white;
-    top: 80px;
-    width: 56px;
-    position: absolute;
+  padding: 17px;
+  background-color: white;
+  top: 80px;
+  width: 56px;
+  position: absolute;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  animation: slideFade 0.3s ease-out;
+}
+
+@keyframes slideFade {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .menuButton {
-    background: none;
-    border: none;
-    cursor: pointer;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin: 10px 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.menuButton:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
 }
 
 .menuButton::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background-color: white;
-    opacity: 0;
-    transition: opacity 0.1s ease;
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background-color: white;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
 }
 
 .menuButton.active::before {
-    opacity: 1;
+  opacity: 1;
 }

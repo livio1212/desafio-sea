@@ -7,6 +7,8 @@ import EmBreve from './components/EmBreve/EmBreve';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from './store';
+import { ToastContainer } from 'react-toastify'; 
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
@@ -57,6 +59,7 @@ function App() {
           ) : (
             <EmBreve marginStyle='700px' />
           )}
+          <ToastContainer />
         </div>
       </div>
     </div>
