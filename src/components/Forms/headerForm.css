@@ -1,0 +1,17 @@
+.userContent{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #649FBF33;
+    border-radius: 10px;
+}
+
+.buttonStyle {
+    height: 83px;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    background-color: #649FBF;
+    color: white;
+
+}

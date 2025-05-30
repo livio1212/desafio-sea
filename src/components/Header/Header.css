@@ -1,0 +1,50 @@
+.containerHeader {
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1254px;
+    border-radius: 20px;
+}
+
+.headerList {
+    list-style: none;
+    text-decoration: none;
+    display: flex;
+    gap: 80px;
+}
+
+.headerIcon {
+    background-color: #649FBF;
+    padding: 13px;
+    border-radius: 20px;
+    border: black solid 0.7px;
+}
+
+.headerItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+}
+
+.headerItem button {
+    background: none;
+    border: none;
+    font: inherit;
+    padding: 0;
+    cursor: pointer;
+}
+
+.headerItem button:disabled {
+    cursor: not-allowed;
+}
+
+.headerItem.active .headerIcon {
+    color: #649FBF;
+}
+
+.headerItem:not(.active) .headerIcon {
+    filter: grayscale(100%);
+}

@@ -1,0 +1,16 @@
+.main{
+    margin: 40px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+
+    width: 1254px;
+}
+
+.nextStep{
+    display: flex;
+    justify-content: right;
+    width: 1243px;
+}

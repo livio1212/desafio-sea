@@ -1,0 +1,54 @@
+.menuConteiner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #649FBF;
+    width: 56px;
+    height: 768px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.iconsMenuLateral button {
+    background: none;
+    border: none;
+    font: inherit;
+    padding: 0;
+    cursor: pointer;
+}
+
+.outplay {
+    padding: 17px;
+    background-color: white;
+    top: 80px;
+    width: 56px;
+    position: absolute;
+}
+
+.menuButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+}
+
+.menuButton::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background-color: white;
+    opacity: 0;
+    transition: opacity 0.1s ease;
+}
+
+.menuButton.active::before {
+    opacity: 1;
+}

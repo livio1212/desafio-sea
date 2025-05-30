@@ -1,0 +1,39 @@
+*{
+    box-sizing: border-box;
+    list-style: none;
+}
+
+.mainFormContainer {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    width: 100%;
+    height: 754;
+}
+
+.formContainer {
+    background-color: white;
+    border-radius: 20px;
+    position: relative;
+    width: 1224px;
+    flex: 1;
+}
+
+.formContainer p {
+    width: 100%;
+    margin: 0;
+}
+
+.blue-bar {
+    background-color: #649FBF;
+    position: relative;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 20px;
+
+}
+
+.userContent li{
+    display: flex;
+    gap: 16px;
+}
